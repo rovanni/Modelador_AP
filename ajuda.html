@@ -1,0 +1,245 @@
+<!DOCTYPE html>
+<html lang="pt-BR" class="dark">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Guia Didático & Tutorial — Autômatos com Pilha (AP)</title>
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = { darkMode: 'class' }
+    </script>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Fira+Code:wght@400;600&family=Inter:wght@300;400;500;600;700;800&family=Outfit:wght@600;700;800&display=swap');
+        body { font-family: 'Inter', sans-serif; }
+        .title-font { font-family: 'Outfit', sans-serif; }
+        .code-font { font-family: 'Fira Code', monospace; }
+        /* Scrollbar suave */
+        ::-webkit-scrollbar { width: 6px; }
+        ::-webkit-scrollbar-thumb { background: rgba(148, 163, 184, 0.3); border-radius: 9999px; }
+    </style>
+</head>
+<body class="bg-slate-50 text-slate-800 dark:bg-slate-950 dark:text-slate-100 min-h-screen flex flex-col justify-between selection:bg-indigo-500 selection:text-slate-950 transition-colors duration-200">
+
+    <!-- Cabeçalho -->
+    <header class="border-b border-slate-200 dark:border-slate-900 bg-white/80 dark:bg-slate-900/60 backdrop-blur-md sticky top-0 z-40 p-4 transition-colors duration-200">
+        <div class="max-w-5xl mx-auto flex items-center justify-between gap-4">
+            <div class="flex items-center gap-3">
+                <a href="index.html" class="bg-indigo-500/10 hover:bg-indigo-500/20 p-2.5 rounded-xl border border-indigo-500/30 text-indigo-600 dark:text-indigo-400 transition" title="Voltar ao Modelador">
+                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18"></path>
+                    </svg>
+                </a>
+                <div>
+                    <h1 class="text-lg font-extrabold title-font tracking-wide text-indigo-600 dark:text-indigo-400">Guia Didático & Manual do AP</h1>
+                    <p class="text-xs text-slate-500 dark:text-slate-400">Teoria da Computação — Autômatos de Pilha na Prática (Prof. Luciano Rovanni)</p>
+                </div>
+            </div>
+
+            <div class="flex items-center gap-2">
+                <a href="index.html" class="bg-indigo-600 hover:bg-indigo-500 text-white font-bold text-xs px-4 py-2 rounded-xl transition shadow-md shadow-indigo-500/20 flex items-center gap-1.5">
+                    <span>Abrir Simulador</span>
+                    <span>→</span>
+                </a>
+                <button onclick="toggleTheme()" class="p-2 rounded-xl bg-slate-200/60 dark:bg-slate-900 hover:bg-slate-300/60 dark:hover:bg-slate-800 text-slate-700 dark:text-slate-300 border border-slate-300/50 dark:border-slate-800 transition">
+                    🌓
+                </button>
+            </div>
+        </div>
+    </header>
+
+    <!-- Conteúdo Principal -->
+    <main class="max-w-5xl w-full mx-auto p-4 sm:p-6 flex-grow flex flex-col gap-8 my-2 leading-relaxed">
+        
+        <!-- 1. Por que precisamos de uma pilha? -->
+        <section class="bg-white dark:bg-slate-900/50 border border-slate-200 dark:border-slate-800 p-6 rounded-3xl shadow-sm">
+            <div class="flex items-center gap-3 mb-3">
+                <span class="text-2xl">🧠</span>
+                <h2 class="text-xl font-bold title-font text-slate-800 dark:text-slate-100">1. Por que precisamos de uma pilha?</h2>
+            </div>
+            <p class="text-sm text-slate-600 dark:text-slate-300 mb-4">
+                Um <strong>Autômato Finito (AFD/AFN)</strong> possui uma memória <em>estritamente finita</em>, representada exclusivamente pelos seus estados. Ele consegue lembrar "onde está", mas não consegue <strong>contar quantidades arbitrariamente grandes</strong>.
+            </p>
+            <div class="bg-indigo-50/50 dark:bg-indigo-950/20 border border-indigo-500/20 p-4 rounded-2xl mb-4 text-xs">
+                <strong class="text-indigo-600 dark:text-indigo-400 block mb-1 text-sm">O Problema da Linguagem aⁿbⁿ:</strong>
+                Para reconhecer cadeias com a mesma quantidade de <code class="font-bold">a</code>s seguidos de <code class="font-bold">b</code>s (como <code class="font-mono">ab</code>, <code class="font-mono">aabb</code>, <code class="font-mono">aaabbb</code>, etc.), a máquina precisa guardar quantos <code class="font-bold">a</code>s foram lidos para depois conferir se há exatamente o mesmo número de <code class="font-bold">b</code>s. Como <code class="font-mono">n</code> pode ser qualquer número (10, 100, 10.000...), um autômato finito precisaria de infinitos estados, o que viola sua definição!
+            </div>
+            <p class="text-sm text-slate-600 dark:text-slate-300">
+                A solução é equipar a máquina com uma <strong>memória auxiliar simples e organizada</strong>: uma <strong>Pilha (LIFO — Last-In, First-Out)</strong>.
+            </p>
+        </section>
+
+        <!-- 2. A 7-Tupla Formal -->
+        <section class="bg-white dark:bg-slate-900/50 border border-slate-200 dark:border-slate-800 p-6 rounded-3xl shadow-sm">
+            <div class="flex items-center gap-3 mb-4">
+                <span class="text-2xl">📐</span>
+                <h2 class="text-xl font-bold title-font text-slate-800 dark:text-slate-100">2. A Definição Formal (A 7-Tupla)</h2>
+            </div>
+            <p class="text-sm text-slate-600 dark:text-slate-300 mb-4">
+                Formalmente, um Autômato com Pilha é definido como:
+            </p>
+            <div class="p-3.5 bg-slate-100 dark:bg-slate-950 rounded-2xl border border-slate-200 dark:border-slate-800 text-center font-mono font-bold text-sm text-indigo-600 dark:text-indigo-400 mb-5">
+                M = (Q, Σ, Γ, δ, q₀, Z₀, F)
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-3 text-xs">
+                <div class="p-3 rounded-xl bg-slate-50 dark:bg-slate-950/60 border border-slate-200 dark:border-slate-800">
+                    <span class="font-bold text-indigo-600 dark:text-indigo-400 text-sm">Q — Estados</span>
+                    <p class="text-slate-500 dark:text-slate-400 mt-1">Conjunto finito de estados de controle (ex: <code class="font-mono">{q0, q1, q2}</code>).</p>
+                </div>
+                <div class="p-3 rounded-xl bg-slate-50 dark:bg-slate-950/60 border border-slate-200 dark:border-slate-800">
+                    <span class="font-bold text-indigo-600 dark:text-indigo-400 text-sm">Σ — Alfabeto de Entrada</span>
+                    <p class="text-slate-500 dark:text-slate-400 mt-1">Símbolos que formam as palavras lidas da fita (ex: <code class="font-mono">{a, b}</code>).</p>
+                </div>
+                <div class="p-3 rounded-xl bg-slate-50 dark:bg-slate-950/60 border border-slate-200 dark:border-slate-800">
+                    <span class="font-bold text-indigo-600 dark:text-indigo-400 text-sm">Γ — Alfabeto da Pilha</span>
+                    <p class="text-slate-500 dark:text-slate-400 mt-1">Símbolos que podem ser armazenados na memória pilha (ex: <code class="font-mono">{A, Z0}</code>).</p>
+                </div>
+                <div class="p-3 rounded-xl bg-slate-50 dark:bg-slate-950/60 border border-slate-200 dark:border-slate-800">
+                    <span class="font-bold text-indigo-600 dark:text-indigo-400 text-sm">q₀ — Estado Inicial</span>
+                    <p class="text-slate-500 dark:text-slate-400 mt-1">O estado onde a máquina se encontra antes de ler o primeiro caractere (<code class="font-mono">q₀ ∈ Q</code>).</p>
+                </div>
+                <div class="p-3 rounded-xl bg-slate-50 dark:bg-slate-950/60 border border-slate-200 dark:border-slate-800">
+                    <span class="font-bold text-indigo-600 dark:text-indigo-400 text-sm">Z₀ — Marcador de Base</span>
+                    <p class="text-slate-500 dark:text-slate-400 mt-1">Símbolo inicialmente presente no fundo da pilha (<code class="font-mono">Z₀ ∈ Γ</code>). Evita desempilhar além do fundo.</p>
+                </div>
+                <div class="p-3 rounded-xl bg-slate-50 dark:bg-slate-950/60 border border-slate-200 dark:border-slate-800">
+                    <span class="font-bold text-indigo-600 dark:text-indigo-400 text-sm">F — Estados Finais</span>
+                    <p class="text-slate-500 dark:text-slate-400 mt-1">Conjunto de estados de aceitação (<code class="font-mono">F ⊆ Q</code>).</p>
+                </div>
+            </div>
+        </section>
+
+        <!-- 3. As Transições da Pilha (a, X -> α) -->
+        <section class="bg-white dark:bg-slate-900/50 border border-slate-200 dark:border-slate-800 p-6 rounded-3xl shadow-sm">
+            <div class="flex items-center gap-3 mb-4">
+                <span class="text-2xl">🔄</span>
+                <h2 class="text-xl font-bold title-font text-slate-800 dark:text-slate-100">3. Como Funcionam as Transições (δ)</h2>
+            </div>
+            <p class="text-sm text-slate-600 dark:text-slate-300 mb-3">
+                No modelo adotado neste simulador e na literatura clássica (Sipser, Hopcroft/Ullman, Paulo Blauth Menezes), cada transição possui o formato:
+            </p>
+            <div class="p-4 bg-indigo-50/60 dark:bg-indigo-950/30 rounded-2xl border border-indigo-500/20 text-center mb-4">
+                <span class="text-base font-black code-font text-indigo-600 dark:text-indigo-400">a, X ➔ α</span>
+                <div class="grid grid-cols-3 gap-2 mt-3 text-xs text-slate-600 dark:text-slate-300">
+                    <div>
+                        <strong class="text-indigo-500 dark:text-indigo-400 block font-mono">a (Fita)</strong>
+                        Símbolo lido da fita de entrada (ou <code class="font-bold">ε</code> para não consumir fita).
+                    </div>
+                    <div>
+                        <strong class="text-indigo-500 dark:text-indigo-400 block font-mono">X (Topo)</strong>
+                        Símbolo retirado do topo da pilha via <strong>POP</strong> (ou <code class="font-bold">ε</code> para não desempilhar).
+                    </div>
+                    <div>
+                        <strong class="text-indigo-500 dark:text-indigo-400 block font-mono">α (Empilha)</strong>
+                        Cadeia inserida na pilha via <strong>PUSH</strong> (ou <code class="font-bold">ε</code> se apenas desempilhou).
+                    </div>
+                </div>
+            </div>
+
+            <div class="overflow-x-auto text-xs">
+                <table class="w-full border-collapse">
+                    <thead>
+                        <tr class="border-b border-slate-200 dark:border-slate-800 text-slate-400 text-left">
+                            <th class="py-2">Notação</th>
+                            <th class="py-2">O que significa na prática?</th>
+                        </tr>
+                    </thead>
+                    <tbody class="divide-y divide-slate-100 dark:divide-slate-800/40 text-slate-600 dark:text-slate-300">
+                        <tr>
+                            <td class="py-2 font-mono font-bold text-indigo-500">a, Z0 ➔ AZ0</td>
+                            <td class="py-2">Lê 'a', confere se o topo é 'Z0' e empilha 'A' por cima de 'Z0' (o novo topo passa a ser 'A').</td>
+                        </tr>
+                        <tr>
+                            <td class="py-2 font-mono font-bold text-indigo-500">b, A ➔ ε</td>
+                            <td class="py-2">Lê 'b', desempilha 'A' do topo e não empilha nada novo (<strong>POP puro</strong>).</td>
+                        </tr>
+                        <tr>
+                            <td class="py-2 font-mono font-bold text-indigo-500">ε, Z0 ➔ Z0</td>
+                            <td class="py-2">Transição espontânea (sem ler da fita), apenas verifica se voltou à base 'Z0'.</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </section>
+
+        <!-- 4. Critérios de Aceitação -->
+        <section class="bg-white dark:bg-slate-900/50 border border-slate-200 dark:border-slate-800 p-6 rounded-3xl shadow-sm">
+            <div class="flex items-center gap-3 mb-4">
+                <span class="text-2xl">🎯</span>
+                <h2 class="text-xl font-bold title-font text-slate-800 dark:text-slate-100">4. Critérios de Aceitação</h2>
+            </div>
+            <p class="text-sm text-slate-600 dark:text-slate-300 mb-4">
+                Na Teoria da Computação, existem duas formas equivalentes de aceitação para autômatos com pilha:
+            </p>
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-4 text-xs">
+                <div class="p-4 rounded-2xl bg-slate-50 dark:bg-slate-950/60 border border-slate-200 dark:border-slate-800">
+                    <span class="font-bold text-indigo-600 dark:text-indigo-400 text-sm block mb-1">1. Por Estado Final L(M)</span>
+                    <p class="text-slate-500 dark:text-slate-400">
+                        A palavra é <strong>aceita</strong> se, após ler toda a fita de entrada, o autômato atinge um estado final <code class="font-mono">q ∈ F</code>. A pilha pode terminar com qualquer conteúdo.
+                    </p>
+                </div>
+                <div class="p-4 rounded-2xl bg-slate-50 dark:bg-slate-950/60 border border-slate-200 dark:border-slate-800">
+                    <span class="font-bold text-indigo-600 dark:text-indigo-400 text-sm block mb-1">2. Por Pilha Vazia N(M)</span>
+                    <p class="text-slate-500 dark:text-slate-400">
+                        A palavra é <strong>aceita</strong> se, após ler toda a fita de entrada, a pilha é <strong>completamente esvaziada</strong> (conteúdo = vazio). O estado onde a máquina parou não precisa ser final.
+                    </p>
+                </div>
+                <div class="p-4 rounded-2xl bg-slate-50 dark:bg-slate-950/60 border border-slate-200 dark:border-slate-800">
+                    <span class="font-bold text-indigo-600 dark:text-indigo-400 text-sm block mb-1">3. Por Ambos (Final & Pilha)</span>
+                    <p class="text-slate-500 dark:text-slate-400">
+                        Muito comum em exercícios didáticos: exige simultaneamente atingir um estado de aceitação <code class="font-mono">q ∈ F</code> <strong>e</strong> deixar a pilha limpa.
+                    </p>
+                </div>
+            </div>
+        </section>
+
+        <!-- 5. Guia de Uso do Simulador Visual -->
+        <section class="bg-white dark:bg-slate-900/50 border border-slate-200 dark:border-slate-800 p-6 rounded-3xl shadow-sm">
+            <div class="flex items-center gap-3 mb-4">
+                <span class="text-2xl">🎮</span>
+                <h2 class="text-xl font-bold title-font text-slate-800 dark:text-slate-100">5. Guia Rápido de Interação</h2>
+            </div>
+            
+            <div class="grid grid-cols-1 sm:grid-cols-2 gap-3 text-xs mb-4">
+                <div class="flex items-center gap-2 p-2.5 bg-slate-50 dark:bg-slate-950/60 rounded-xl border border-slate-200 dark:border-slate-800">
+                    <span class="font-bold text-indigo-500 font-mono">Duplo clique no vazio:</span>
+                    <span>Cria um novo estado no local do cursor.</span>
+                </div>
+                <div class="flex items-center gap-2 p-2.5 bg-slate-50 dark:bg-slate-950/60 rounded-xl border border-slate-200 dark:border-slate-800">
+                    <span class="font-bold text-indigo-500 font-mono">Shift + Arrastar:</span>
+                    <span>Cria uma nova transição entre nós.</span>
+                </div>
+                <div class="flex items-center gap-2 p-2.5 bg-slate-50 dark:bg-slate-950/60 rounded-xl border border-slate-200 dark:border-slate-800">
+                    <span class="font-bold text-indigo-500 font-mono">Duplo clique no estado:</span>
+                    <span>Alterna o estado como Final (círculo duplo).</span>
+                </div>
+                <div class="flex items-center gap-2 p-2.5 bg-slate-50 dark:bg-slate-950/60 rounded-xl border border-slate-200 dark:border-slate-800">
+                    <span class="font-bold text-indigo-500 font-mono">Botão direito no nó:</span>
+                    <span>Menu com Inicial, Renomear, Excluir e Laço.</span>
+                </div>
+            </div>
+
+            <div class="p-4 bg-amber-500/10 border border-amber-500/20 rounded-2xl text-xs text-amber-800 dark:text-amber-300">
+                <strong>Dica Pedagógica da Pilha Visual:</strong> Ao simular no modo passo a passo, observe a coluna da <strong>Pilha Visual</strong> à direita do simulador. O elemento no topo fica sempre destacado em roxo intenso e você pode acompanhar os crachás de operação em tempo real (<code class="font-mono">PUSH</code> em verde e <code class="font-mono">POP</code> em amarelo).
+            </div>
+        </section>
+
+    </main>
+
+    <!-- Rodapé -->
+    <footer class="border-t border-slate-200 dark:border-slate-900 bg-white/60 dark:bg-slate-900/40 backdrop-blur-md p-4 text-center text-xs text-slate-400">
+        <p>Modelador de Autômatos de Pilha (AP) • Disciplina de <strong>Teoria da Computação</strong> — UENP • Prof. Luciano Rovanni</p>
+    </footer>
+
+    <script>
+        function toggleTheme() {
+            const isDark = document.documentElement.classList.toggle('dark');
+            localStorage.setItem('ap_theme', isDark ? 'dark' : 'light');
+        }
+        if (localStorage.getItem('ap_theme') === 'light') {
+            document.documentElement.classList.remove('dark');
+        }
+    </script>
+</body>
+</html>
