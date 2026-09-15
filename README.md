@@ -82,15 +82,31 @@ O sistema funciona inteiramente no navegador (*client-side*), dispensando instal
 
 ---
 
+## 🌐 Acesso Online via Web (GitHub Pages)
+
+Você pode experimentar e usar a ferramenta diretamente pelo navegador sem precisar baixar nada:
+👉 **[https://rovanni.github.io/Modelador_AP/](https://rovanni.github.io/Modelador_AP/)**
+
+E acessar o tutorial didático em:
+👉 **[https://rovanni.github.io/Modelador_AP/ajuda.html](https://rovanni.github.io/Modelador_AP/ajuda.html)**
+
+---
+
 ## 🚀 Como Executar Localmente
 
 Nenhum processo de build ou servidor é obrigatório.
 
-1.  Abra a pasta do projeto:
+1.  Clone este repositório:
     ```bash
-    d:\Professor\UENP\2026\Disciplinas\Teoria Computacao\Modelador_AP
+    git clone https://github.com/rovanni/Modelador_AP.git
     ```
-2.  Dê um duplo clique no arquivo `index.html`.
+2.  Navegue até a pasta do projeto e abra o arquivo `index.html` em qualquer navegador moderno (Chrome, Firefox, Safari, Edge):
+    *   No Windows/macOS/Linux: Clique duas vezes sobre o arquivo `index.html`.
+    *   Ou execute a página localmente via terminal se possuir o Python instalado:
+        ```bash
+        python -m http.server 8000
+        ```
+        Em seguida, acesse `http://localhost:8000/index.html`.
 3.  Acesse também o guia didático em `ajuda.html` para consultar explicações teóricas e tutoriais passo a passo.
 
 ---
