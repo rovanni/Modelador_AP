@@ -1916,7 +1916,8 @@
         }
 
         function startSingleSimulation() {
-            simString = document.getElementById('sim-input-string').value.trim();
+            const rawInput = document.getElementById('sim-input-string').value.trim();
+            simString = (rawInput === 'ε') ? '' : rawInput; // 'ε' digitado = palavra vazia
             simTape = simString.split('');
             resetSimulation();
             precomputeSimulationTrace();
@@ -2417,7 +2418,8 @@
             let rejectedCount = 0;
 
             lines.forEach((word) => {
-                const isAccepted = evaluateWord(word);
+                const testWord = (word === 'ε') ? '' : word; // 'ε' digitado = palavra vazia
+                const isAccepted = evaluateWord(testWord);
                 if (isAccepted) acceptedCount++;
                 else rejectedCount++;
 
