@@ -49,10 +49,10 @@ test('restaura de verdade ao abrir (init lê o salvo)', () => {
 for (const key of Object.keys(ex)) {
     app.loadExample(key);
     const tex = app.generateTikzCode();
-    test(`TikZ ${key}: \varepsilon só dentro de $...$`, () => !tex.replace(/\$[^$]*\$/g, '').includes('\varepsilon'));
+    test(`TikZ ${key}: \\varepsilon só dentro de $...$`, () => !tex.replace(/\$[^$]*\$/g, '').includes('\\varepsilon'));
     test(`TikZ ${key}: laços usam loop above e rótulos em modo matemático`, () => /loop above/.test(tex) && !/node \{[^$}]*[a-zA-Z]/.test(tex.replace(/\$[^$]*\$/g, '')));
 }
-test('documento .tex completo', () => { const t = app.generateFullTeX(); return t.includes('\documentclass') && t.includes('\end{document}'); });
+test('documento .tex completo', () => { const t = app.generateFullTeX(); return t.includes('\\documentclass') && t.includes('\\end{document}'); });
 test('PNG: exporta sem erro e mantém o tema', () => { const d = app.isDarkTheme(); app.exportCanvasToPNG(); return app.isDarkTheme() === d; });
 
 summary();
