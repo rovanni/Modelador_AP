@@ -4,13 +4,9 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Guia Didático & Tutorial — Autômatos com Pilha (AP)</title>
-    <!-- Tailwind CSS -->
-    <script src="https://cdn.tailwindcss.com"></script>
-    <script>
-        tailwind.config = { darkMode: 'class' }
-    </script>
+    <link rel="stylesheet" href="css/fonts.css">
+    <link rel="stylesheet" href="css/tailwind.css">
     <style>
-        @import url('https://fonts.googleapis.com/css2?family=Fira+Code:wght@400;600&family=Inter:wght@300;400;500;600;700;800&family=Outfit:wght@600;700;800&display=swap');
         body { font-family: 'Inter', sans-serif; }
         .title-font { font-family: 'Outfit', sans-serif; }
         .code-font { font-family: 'Fira Code', monospace; }
@@ -222,6 +218,15 @@
 
             <div class="p-4 bg-amber-500/10 border border-amber-500/20 rounded-2xl text-xs text-amber-800 dark:text-amber-300">
                 <strong>Dica Pedagógica da Pilha Visual:</strong> Ao simular no modo passo a passo, observe a coluna da <strong>Pilha Visual</strong> à direita do simulador. O elemento no topo fica sempre destacado em roxo intenso e você pode acompanhar os crachás de operação em tempo real (<code class="font-mono">PUSH</code> em verde e <code class="font-mono">POP</code> em amarelo).
+            </div>
+
+            <div class="mt-3 p-4 bg-indigo-50/50 dark:bg-indigo-950/20 border border-indigo-500/20 rounded-2xl text-xs">
+                <strong class="text-indigo-600 dark:text-indigo-400">Novidades do simulador:</strong>
+                <ul class="list-disc pl-5 mt-1 space-y-1">
+                    <li><strong>Tabela de δ em destaque:</strong> durante a simulação, a linha da regra aplicada no passo atual fica marcada na tabela.</li>
+                    <li><strong>Salvamento automático:</strong> ao reabrir a página, o último autômato volta como você deixou. Os Exemplos recomeçam do zero.</li>
+                    <li><strong>Exportações:</strong> o PNG sai sempre com fundo branco, e o botão LaTeX também baixa um <code class="font-mono">.tex</code> completo e compilável.</li>
+                </ul>
             </div>
         </section>
 

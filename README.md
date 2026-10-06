@@ -111,6 +111,46 @@ Nenhum processo de build ou servidor é obrigatório.
 
 ---
 
+## 🗂️ Estrutura do Projeto
+
+| Arquivo | Conteúdo |
+|---|---|
+| `index.html` | Estrutura da página (HTML) |
+| `ajuda.html` | Guia didático |
+| `css/style.css` | Estilos complementares |
+| `css/tailwind.css` | Utilitários do Tailwind já compilados (gerado, não editar à mão) |
+| `css/fonts.css`, `fonts/` | Fontes locais (Fira Code, Inter, Outfit) |
+| `js/canvas.js` | Desenho do grafo e interação com o canvas |
+| `js/examples.js` | Exemplos clássicos |
+| `js/export.js` | Exportação JSON, PNG e LaTeX (TikZ) |
+| `js/main.js` | Inicialização da página |
+| `js/modals.js` | Modal de transição |
+| `js/model.js` | Estado do autômato, tema, desfazer/refazer, alfabetos, estados/transições e validador |
+| `js/simulation.js` | Motor de simulação do AP, controles do player e testes em lote |
+| `tools/` | Configuração para regerar `css/tailwind.css` |
+| `tests/` | Testes de lógica (`run_tests.js`) e de interface (`ui_checks.js`) |
+
+A ordem dos `<script>` em `index.html` importa: ela segue a ordem da tabela acima.
+
+## 🔌 Uso Offline
+
+O simulador **não precisa de internet**: Tailwind e fontes são arquivos locais. Se você adicionar classes novas do Tailwind em `index.html` ou `js/*.js`, regere o CSS (precisa de Node):
+
+```bash
+cd tools
+npx tailwindcss@3.4.17 -c tailwind.config.js -i tailwind-input.css -o ../css/tailwind.css --minify
+```
+
+## 🧪 Testes
+
+- **Lógica** (sem navegador): `node tests/run_tests.js`
+- **Interface**: abra `index.html`, abra o console (F12), cole o conteúdo de `tests/ui_checks.js` e tecle Enter. O script simula arrastar, Shift+arrastar, duplo clique, menu de contexto, layouts, simulação, salvamento e exportações, e imprime PASS/FAIL.
+
+## 📤 Exportações
+
+- **PNG** sempre com fundo branco (bom para slides e artigos), qualquer que seja o tema da tela.
+- **LaTeX/TikZ** com rótulos em modo matemático e laços com `loop above`; o botão "Baixar .tex completo" gera um documento pronto para compilar (classe `standalone`).
+
 ## 📄 Licença
 
 Este projeto está licenciado sob a licença **MIT** — sinta-se livre para usar, estudar, modificar e distribuir em salas de aula ou projetos acadêmicos.
